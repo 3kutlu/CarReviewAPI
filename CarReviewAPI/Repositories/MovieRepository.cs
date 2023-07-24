@@ -71,5 +71,17 @@ namespace MovieReviewAPI.Repositories
             var saved = _context.SaveChanges();
             return saved > 0? true : false;
         }
+
+        public bool UpdateMovie(int directorId, int categoryId, Movie movie)
+        {
+            _context.Update(movie);
+            return Save();
+        }
+
+        public bool DeleteMovie(Movie movie)
+        {
+            _context.Remove(movie);
+            return Save();
+        }
     }
 }

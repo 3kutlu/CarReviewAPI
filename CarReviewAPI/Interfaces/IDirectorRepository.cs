@@ -11,6 +11,8 @@ namespace MovieReviewAPI.Interfaces
         ICollection<Movie> GetMoviesByDirectorId(int directorId);
         bool DirectorExists(int directorId);
         bool CreateDirector(Director director);
+        bool UpdateDirector(Director director);
+        bool DeleteDirector(Director directorId);
         bool Save();
     }
 }

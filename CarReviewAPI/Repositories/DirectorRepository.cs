@@ -20,6 +20,12 @@ namespace MovieReviewAPI.Repositories
             return Save();
         }
 
+        public bool DeleteDirector(Director directorId)
+        {
+            _context.Remove(directorId);
+            return Save();
+        }
+
         public bool DirectorExists(int directorId)
         {
             return _context.Directors.Any(d => d.Id == directorId);
@@ -64,6 +70,12 @@ namespace MovieReviewAPI.Repositories
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateDirector(Director director)
+        {
+            _context.Update(director);
+            return Save();
         }
     }
 }

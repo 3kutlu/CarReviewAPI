@@ -50,7 +50,7 @@ namespace MovieReviewAPI.Controllers
             return Ok(director);
         }
 
-        [HttpGet("name={directorId}")]
+        [HttpGet("name={directorName}")]
         [ProducesResponseType(200, Type = typeof(Director))]
         [ProducesResponseType(400)]
         public IActionResult GetDirectorByName(string directorName)
@@ -111,8 +111,59 @@ namespace MovieReviewAPI.Controllers
             return Ok("Director successfully created");
         }
 
+        [HttpPut("{directorId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateDirector(int directorId, [FromBody] DirectorDto updatedDirector)
+        {
+            if (updatedDirector == null)
+                return BadRequest(ModelState);
 
+            if (directorId != updatedDirector.Id)
+                return BadRequest(ModelState);
 
+            if (!_directorRepository.DirectorExists(directorId))
+                return NotFound();
 
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var directorMap = _mapper.Map<Director>(updatedDirector);
+
+            if (!_directorRepository.UpdateDirector(directorMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating director");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{directorId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteDirector(int directorId)
+        {
+            if (!_directorRepository.DirectorExists(directorId))
+                return NotFound();
+
+            var directorToDelete = _directorRepository.GetDirectorById(directorId);
+
+            //It is necessary to check categories that are part of another models
+            //but this is a simple database in order to learn stuff
+            // so I am not gonna add so many validations to avoid conflicts
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_directorRepository.DeleteDirector(directorToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting director");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
     }
 }

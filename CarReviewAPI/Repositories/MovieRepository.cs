@@ -42,5 +42,34 @@ namespace MovieReviewAPI.Repositories
         { 
             return _context.Movies.Any(m => m.Id == id);
         }
+
+        public bool CreateMovie(int directorId, int categoryId, Movie movie)
+        {
+            var director = _context.Directors.Where(d => d.Id == directorId).FirstOrDefault();
+            var category = _context.Categories.Where(c => c.Id == categoryId).FirstOrDefault();
+
+            var movieDirector = new MovieDirector()
+            {
+                Director = director,
+                Movie = movie
+            };
+            _context.Add(movieDirector);
+
+            var movieCategory = new MovieCategory()
+            {
+                Category = category,
+                Movie = movie
+            };
+            _context.Add(movieCategory);
+
+            _context.Add(movie);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0? true : false;
+        }
     }
 }

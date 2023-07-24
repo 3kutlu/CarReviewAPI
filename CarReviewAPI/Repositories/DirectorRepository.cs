@@ -13,6 +13,13 @@ namespace MovieReviewAPI.Repositories
         {
             _context = context;
         }
+
+        public bool CreateDirector(Director director)
+        {
+            _context.Add(director);
+            return Save();
+        }
+
         public bool DirectorExists(int directorId)
         {
             return _context.Directors.Any(d => d.Id == directorId);
@@ -51,6 +58,12 @@ namespace MovieReviewAPI.Repositories
             return _context.MovieDirectors
                 .Where(d => d.DirectorId == directorId)
                 .Select(m => m.Movie).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

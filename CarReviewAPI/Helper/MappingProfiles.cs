@@ -9,11 +9,19 @@ namespace MovieReviewAPI.Helper
         public MappingProfiles()
         {
             CreateMap<Movie, MovieDto>(); 
-            CreateMap<Category, CategoryDto>();
-            CreateMap<Director, DirectorDto>();
-            CreateMap<Review, ReviewDto>();
-            CreateMap<Reviewer, ReviewerDto>();
+            CreateMap<MovieDto, Movie>();
 
+            CreateMap<Category, CategoryDto>();
+            CreateMap<CategoryDto, Category>();
+
+            CreateMap<Director, DirectorDto>();
+            CreateMap<DirectorDto, Director>();
+
+            CreateMap<Review, ReviewDto>();
+            CreateMap<ReviewDto, Review>();
+
+            CreateMap<Reviewer, ReviewerDto>();
+            CreateMap<ReviewerDto, Reviewer>();
         }
     }
 }

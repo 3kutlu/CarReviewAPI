@@ -7,5 +7,7 @@ namespace MovieReviewAPI.Interfaces
         ICollection<Reviewer> GetReviewers();
         Reviewer GetReviewerById(int reviewerId);
         bool ReviewerExists(int reviewerId);
+        bool CreateReviewer(Reviewer reviewer);
+        bool Save();
     }
 }

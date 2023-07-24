@@ -13,11 +13,18 @@ namespace MovieReviewAPI.Controllers
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
+        private readonly IMovieRepository _movieRepository;
+        private readonly IReviewerRepository _reviewerRepository;
 
-        public ReviewController(IReviewRepository reviewRepository, IMapper mapper)
+        public ReviewController(IReviewRepository reviewRepository, 
+            IMapper mapper, 
+            IMovieRepository movieRepository,
+            IReviewerRepository reviewerRepository)
         {
             _reviewRepository = reviewRepository;
             _mapper = mapper;
+            _movieRepository = movieRepository;
+            _reviewerRepository = reviewerRepository;
         }
 
         [HttpGet]
@@ -76,5 +83,40 @@ namespace MovieReviewAPI.Controllers
             return Ok(reviews);
         }
 
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateReview([FromQuery] int reviewerId, [FromQuery] int movieId, [FromBody] ReviewDto reviewCreate)
+        {
+            if (reviewCreate == null)
+                return BadRequest(ModelState);
+
+            var reviews = _reviewRepository.GetReviews()
+                .Where(r => r.Text.Trim().ToUpper() == reviewCreate.Text.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (reviews != null)
+            {
+                ModelState.AddModelError("", "Review already exists!");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var reviewMap = _mapper.Map<Review>(reviewCreate);
+
+            reviewMap.Movie = _movieRepository.GetMovieById(movieId);
+            reviewMap.Reviewer = _reviewerRepository.GetReviewerById(reviewerId);
+
+
+            if (!_reviewRepository.CreateReview(reviewMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving!");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Review successfully created");
+        }
     }
 }

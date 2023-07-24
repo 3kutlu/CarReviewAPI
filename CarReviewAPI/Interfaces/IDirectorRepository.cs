@@ -10,5 +10,7 @@ namespace MovieReviewAPI.Interfaces
         ICollection<Director> GetDirectorByMovieId(int movieId);
         ICollection<Movie> GetMoviesByDirectorId(int directorId);
         bool DirectorExists(int directorId);
+        bool CreateDirector(Director director);
+        bool Save();
     }
 }

@@ -12,6 +12,11 @@ namespace MovieReviewAPI.Repositories
         {
             _context = context;
         }
+        public bool CreateReview(Review review)
+        {
+            _context.Add(review);
+            return Save();
+        }
         public ICollection<Review> GetAllReviewByReviewerId(int reviewerId)
         {
             return _context.Reviews.Where(r => r.Reviewer.Id == reviewerId).ToList();
@@ -35,6 +40,11 @@ namespace MovieReviewAPI.Repositories
         public bool ReviewExists(int reviewId)
         {
             return _context.Reviews.Any(r => r.Id == reviewId);
+        }
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -9,5 +9,7 @@ namespace MovieReviewAPI.Interfaces
         ICollection<Review> GetAllReviewsByMovieId(int movieId);
         ICollection<Review> GetAllReviewByReviewerId(int reviewerId);
         bool ReviewExists(int reviewId);
+        bool CreateReview(Review review);
+        bool Save();
     }
 }

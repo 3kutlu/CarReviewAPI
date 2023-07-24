@@ -79,7 +79,37 @@ namespace MovieReviewAPI.Controllers
             return Ok(movies);
         }
 
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateDirector([FromBody] DirectorDto directorCreate)
+        {
+            if (directorCreate == null)
+                return BadRequest(ModelState);
 
+            var director = _directorRepository.GetDirectors()
+                .Where(d => d.LastName.Trim().ToUpper() == directorCreate.LastName.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (director != null)
+            {
+                ModelState.AddModelError("", "Director already exists!");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var directorMap = _mapper.Map<Director>(directorCreate);
+
+            if (!_directorRepository.CreateDirector(directorMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving!");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Director successfully created");
+        }
 
 
 

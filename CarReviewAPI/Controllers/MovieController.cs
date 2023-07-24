@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieReviewAPI.Dto;
 using MovieReviewAPI.Interfaces;
 using MovieReviewAPI.Models;
+using MovieReviewAPI.Repositories;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace MovieReviewAPI.Controllers
@@ -79,6 +80,36 @@ namespace MovieReviewAPI.Controllers
             return Ok(rating);
         }
 
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateMovie([FromQuery] int directorId,[FromQuery] int categoryId, [FromBody] MovieDto movieCreate)
+        {
+            if (movieCreate == null)
+                return BadRequest(ModelState);
 
+            var movies = _movieRepository.GetMovies()
+                .Where(m => m.Name.Trim().ToUpper() == movieCreate.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (movies!= null)
+            {
+                ModelState.AddModelError("", "Movie already exists!");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var movieMap= _mapper.Map<Movie>(movieCreate);
+
+            if (!_movieRepository.CreateMovie(directorId, categoryId, movieMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving!");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Movie successfully created");
+        }
     }
 }

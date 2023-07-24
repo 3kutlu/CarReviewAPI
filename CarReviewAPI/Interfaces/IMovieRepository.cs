@@ -7,7 +7,7 @@ namespace MovieReviewAPI.Interfaces
         ICollection<Movie> GetMovies();
         Movie GetMovieById(int id);
         Movie GetMovieByName(string name);
-        //decimal GetMovierating(int movieId);
         bool MovieExists(int id);
+        decimal GetMovieRating(int movieId);
     }
 }

@@ -34,7 +34,7 @@ namespace MovieReviewAPI.Controllers
             return Ok(reviews);
         }
 
-        [HttpGet("id={reviewId}")]
+        [HttpGet("{reviewId}")]
         [ProducesResponseType(200, Type = typeof(Review))]
         [ProducesResponseType(400)]
         public IActionResult GetReviewById(int reviewId)
@@ -42,7 +42,7 @@ namespace MovieReviewAPI.Controllers
             if (!_reviewRepository.ReviewExists(reviewId))
                 return NotFound();
 
-            var review = _mapper.Map<MovieDto>(_reviewRepository.GetReviewById(reviewId));
+            var review = _mapper.Map<ReviewDto>(_reviewRepository.GetReviewById(reviewId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -50,6 +50,31 @@ namespace MovieReviewAPI.Controllers
             return Ok(review);
         }
 
+        [HttpGet("movie/{movieId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAllReviewsByMovieId(int movieId)
+        {
+            var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepository.GetAllReviewsByMovieId(movieId));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(reviews);
+        }
+
+        [HttpGet("reviewer/{reviewerId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAllReviewsByReviewerId(int reviewerId)
+        {
+            var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepository.GetAllReviewByReviewerId(reviewerId));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(reviews);
+        }
 
     }
 }

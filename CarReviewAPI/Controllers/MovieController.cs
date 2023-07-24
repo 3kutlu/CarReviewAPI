@@ -62,5 +62,23 @@ namespace MovieReviewAPI.Controllers
 
             return Ok(movie);
         }
+
+        [HttpGet("{movieId}/rating")]
+        [ProducesResponseType(200, Type = typeof(decimal))]
+        [ProducesResponseType(400)]
+        public IActionResult GetMovieRating(int movieId)
+        {
+            if (!_movieRepository.MovieExists(movieId))
+                return NotFound();
+
+            var rating = _movieRepository.GetMovieRating(movieId);
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return Ok(rating);
+        }
+
+
     }
 }

@@ -1,11 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using MovieReviewAPI.Data;
+using MovieReviewAPI.Interfaces;
+using MovieReviewAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IDirectorRepository, DirectorRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

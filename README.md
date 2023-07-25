@@ -2,7 +2,7 @@
 
 This is a simple ASP.NET CORE Web Api with SwaggerUI based on the model below.
 
-This project contains 5 models, CRUD operations for each one of them, code-first approach, SQL and InMemory.
+This project contains 5 models, CRUD operations for each one of them, code-first approach, SQL.
 
 While doing this project I tried to use Github to the fullest with test issues, pr, branches and merges
 
